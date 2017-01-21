@@ -1,8 +1,8 @@
-# muk-prop
+# muk-prop.js
 
-[![Build Status](https://secure.travis-ci.org/fent/node-muk-prop.svg)](http://travis-ci.org/fent/node-muk-prop)
-[![Dependency Status](https://gemnasium.com/fent/node-muk-prop.svg)](https://gemnasium.com/fent/node-muk-prop)
-[![codecov](https://codecov.io/gh/fent/node-muk-prop/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/node-muk-prop)
+[![Build Status](https://secure.travis-ci.org/fent/muk-prop.js.svg)](http://travis-ci.org/fent/muk-prop.js)
+[![Dependency Status](https://gemnasium.com/fent/muk-prop.js.svg)](https://gemnasium.com/fent/muk-prop.js)
+[![codecov](https://codecov.io/gh/fent/muk-prop.js/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/muk-prop.js)
 
 ![muk](muk.gif)
 
