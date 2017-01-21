@@ -1,15 +1,15 @@
 {
-  "name": "muk",
-  "description": "Mock object methods and dependencies.",
+  "name": "muk-prop",
+  "description": "Mock object methods and properties.",
   "keywords": [
     "test",
     "mock",
-    "dependency"
+    "stub"
   ],
   "version": "0.5.3",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fent/node-muk.git"
+    "url": "git://github.com/fent/node-muk-prop.git"
   },
   "author": "fent (https://github.com/fent)",
   "main": "./lib/index.js",
