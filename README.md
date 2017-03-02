@@ -1,7 +1,7 @@
 # muk-prop.js
 
 [![Build Status](https://secure.travis-ci.org/fent/muk-prop.js.svg)](http://travis-ci.org/fent/muk-prop.js)
-[![Dependency Status](https://gemnasium.com/fent/muk-prop.js.svg)](https://gemnasium.com/fent/muk-prop.js)
+[![Dependency Status](https://david-dm.org/fent/muk-prop.js.svg)](https://david-dm.org/fent/muk-prop.js)
 [![codecov](https://codecov.io/gh/fent/muk-prop.js/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/muk-prop.js)
 
 ![muk](muk.gif)
