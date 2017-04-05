@@ -9,7 +9,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fent/node-muk-prop.git"
+    "url": "git://github.com/fent/muk-prop.js.git"
   },
   "author": "Roly Fentanes (https://github.com/fent)",
   "main": "./lib/index.js",
