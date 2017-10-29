@@ -20,8 +20,8 @@
     "lib": "./lib"
   },
   "devDependencies": {
-    "mocha": "*",
-    "istanbul": "0"
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1"
   },
   "engines": {
     "node": ">=4"
