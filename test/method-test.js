@@ -1,29 +1,29 @@
 'use strict';
 
-var muk    = require('..');
-var assert = require('assert');
-var fs     = require('fs');
+const muk    = require('..');
+const assert = require('assert');
+const fs     = require('fs');
 
 
-describe('Mock methods', function() {
+describe('Mock methods', () => {
   var readFile = fs.readFile;
   var mkdir = fs.mkdir;
 
   afterEach(muk.restore);
 
-  it('Contains original methods', function() {
+  it('Contains original methods', () => {
     assert.equal(typeof fs.readFile, 'function',
-                 'fs.readFile is function');
+      'fs.readFile is function');
     assert.equal(typeof fs.readFileSync, 'function',
-                 'fs.readFileSync is function');
+      'fs.readFileSync is function');
   });
 
-  it('Methods are new objects after mocked', function() {
-    var readFileMock = function(path, callback) {
+  it('Methods are new objects after mocked', () => {
+    var readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
 
-    var mkdirMock = function(path, callback) {
+    var mkdirMock = (path, callback) => {
       process.nextTick(callback.bind(null, null));
     };
 
@@ -33,13 +33,13 @@ describe('Mock methods', function() {
     assert.equal(fs.mkdir, mkdirMock, 'object method is equal to mock');
   });
 
-  it('No errors calling new mocked methods', function(done) {
-    var readFileMock = function(path, callback) {
+  it('No errors calling new mocked methods', (done) => {
+    var readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
 
-    fs.readFile('grimer', function(err, data) {
+    fs.readFile('grimer', (err, data) => {
       if (err) return done(err);
 
       assert.equal(data, 'hello!', 'data matches');
@@ -47,12 +47,12 @@ describe('Mock methods', function() {
     });
   });
 
-  it('Should have original methods after muk.restore()', function() {
+  it('Should have original methods after muk.restore()', () => {
     muk.restore();
     assert.equal(fs.readFile, readFile, 'original method is restored');
     assert.equal(fs.mkdir, mkdir, 'original method is restored');
 
-    var readFileMock = function(path, callback) {
+    var readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
@@ -61,10 +61,10 @@ describe('Mock methods', function() {
     assert.equal(fs.readFile, readFile, 'mock twices, original method should be restored too');
   });
 
-  it('should mock method on prototype', function() {
+  it('should mock method on prototype', () => {
     var readFile = fs.readFile;
     var newFs = Object.create(fs);
-    var readFileMock = function(path, callback) {
+    var readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(newFs, 'readFile', readFileMock);
@@ -75,7 +75,7 @@ describe('Mock methods', function() {
   });
 });
 
-describe('Mock property', function () {
+describe('Mock property', () => {
   var config = {
     enableCache: true,
     delay: 10
@@ -84,12 +84,12 @@ describe('Mock property', function () {
 
   afterEach(muk.restore);
 
-  it('Contains original property', function () {
+  it('Contains original property', () => {
     assert.equal(config.enableCache, true, 'enableCache is true');
     assert.equal(config.delay, 10, 'delay is 10');
   });
 
-  it('Property are new after mocked', function () {
+  it('Property are new after mocked', () => {
     muk(config, 'enableCache', false);
     muk(config, 'delay', 0);
     muk(process.env, 'HOME', '/mockhome');
@@ -99,7 +99,7 @@ describe('Mock property', function () {
     assert.equal(process.env.HOME, '/mockhome', 'process.env.HOME is /mockhome');
   });
 
-  it('Should have original properties after muk.restore()', function () {
+  it('Should have original properties after muk.restore()', () => {
     muk(config, 'enableCache', false);
     muk(config, 'enableCache', false);
     muk(config, 'delay', 0);
@@ -115,13 +115,13 @@ describe('Mock property', function () {
     assert(!hasOwnProperty(process.env, 'notExistProp'), 'notExistProp is deleted');
   });
 
-  it('should mock function when method is null', function() {
+  it('should mock function when method is null', () => {
     muk(config, 'enableCache');
     assert.equal(typeof config.enableCache, 'function', 'enableCache is function');
     assert.equal(config.enableCache(), undefined, 'enableCache return undefined');
   });
 
-  it('should mock property on prototype', function() {
+  it('should mock property on prototype', () => {
     var newConfig = Object.create(config);
     muk(newConfig, 'enableCache', false);
     assert.deepEqual(Object.keys(newConfig), ['enableCache'], 'obj should contain properties');
@@ -132,7 +132,7 @@ describe('Mock property', function () {
   });
 });
 
-describe('Mock getter', function() {
+describe('Mock getter', () => {
   var obj = {
     get a() {
       return 1;
@@ -141,22 +141,22 @@ describe('Mock getter', function() {
 
   afterEach(muk.restore);
 
-  it('Contains original getter', function() {
+  it('Contains original getter', () => {
     assert.equal(obj.a, 1, 'property a of obj is 1');
   });
 
-  it('Methods are new getter after mocked', function() {
+  it('Methods are new getter after mocked', () => {
     muk(obj, 'a', 2);
     assert.equal(obj.a, 2, 'property a of obj is equal to mock');
   });
 
-  it('Should have original getter after muk.restore()', function() {
+  it('Should have original getter after muk.restore()', () => {
     muk(obj, 'a', 2);
     muk.restore();
     assert.equal(obj.a, 1, 'property a of obj is equal to origin');
   });
 
-  it('should mock property on prototype', function() {
+  it('should mock property on prototype', () => {
     var newObj = Object.create(obj);
     muk(newObj, 'a', 2);
     assert.deepEqual(Object.keys(newObj), ['a'], 'obj should contain properties');
@@ -167,11 +167,11 @@ describe('Mock getter', function() {
   });
 });
 
-describe('Mock check', function() {
+describe('Mock check', () => {
 
   afterEach(muk.restore);
 
-  it('Should check whether is mocked', function() {
+  it('Should check whether is mocked', () => {
     var obj = {
       a: 1,
     };
@@ -181,7 +181,7 @@ describe('Mock check', function() {
     assert.ok(muk.isMocked(obj, 'a'), 'obj should be mocked');
   });
 
-  it('Should not be enumerable', function() {
+  it('Should not be enumerable', () => {
     var obj = {
       a: 1,
     };
@@ -195,7 +195,7 @@ describe('Mock check', function() {
     assert.deepEqual(keys, ['a']);
   });
 
-  it('Should be restored', function() {
+  it('Should be restored', () => {
     var obj = {
       a: 1,
     };
@@ -206,7 +206,7 @@ describe('Mock check', function() {
     assert.equal(muk.isMocked(obj, 'a'), false);
   });
 
-  it('Should check different type', function() {
+  it('Should check different type', () => {
     var obj = {
       a: 1,
       b: '1',
@@ -232,7 +232,7 @@ describe('Mock check', function() {
     assert.ok(muk.isMocked(obj, 'e'));
   });
 
-  it('should check process.env', function() {
+  it('should check process.env', () => {
     muk(process.env, 'HOME', '/mockhome');
     assert.equal(process.env.HOME, '/mockhome');
     assert.ok(muk.isMocked(process.env, 'HOME'));

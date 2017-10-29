@@ -11,10 +11,10 @@
 Object method mocking.
 
 ```js
-var fs = require('fs');
-var muk = require('muk-prop');
+const fs = require('fs');
+const muk = require('muk-prop');
 
-muk(fs, 'readFile', function(path, callback) {
+muk(fs, 'readFile', (path, callback) => {
   process.nextTick(callback.bind(null, null, 'file contents here'));
 });
 ```
@@ -30,7 +30,7 @@ Restore all mocked methods after tests.
 ```js
 muk.restore();
 
-fs.readFile(file, function(err, data) {
+fs.readFile(file, (err, data) => {
   // will actually read from `file`
 });
 ```
