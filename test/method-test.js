@@ -167,6 +167,41 @@ describe('Mock getter', () => {
   });
 });
 
+describe('Mock value with getter', () => {
+  var obj = {
+    a: 1,
+  };
+
+  afterEach(muk.restore);
+  
+  it('Should have original getter after muk.restore()', () => {
+    muk(obj, 'a', null, {
+      getter: () => {
+        return 2;
+      }
+    });
+    assert.equal(obj.a, 2, 'property a of obj is 2 with getter');
+  });
+  
+  it('Should have original getter after muk.restore()', () => {
+    muk(obj, 'a', null, {
+      
+    });
+    assert.equal(obj.a, undefined, 'property a of obj is undefined with empty getter');
+  });
+  
+  it('Should have original getter after muk.restore()', () => {
+    muk(obj, 'a', null, {
+      getter: () => {
+        return 2;
+      }
+    });
+    
+    muk.restore();
+    assert.equal(obj.a, 1, 'property a of obj is equal to origin');
+  });
+});
+
 describe('Mock check', () => {
 
   afterEach(muk.restore);
