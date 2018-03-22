@@ -183,7 +183,21 @@ describe('Mock value with getter', () => {
     assert.equal(obj.a, 2, 'property a of obj is 2 with getter');
   });
   
-  it('Should have original getter after muk.restore()', () => {
+  it('Should throw error when getter', () => {
+    muk(obj, 'a', null, {
+      getter: () => {
+        throw new Error('oh no');
+      }
+    });
+
+    try{
+      obj.a;
+    }catch(e){
+      assert.equal(e.message, 'oh no')
+    }
+  });
+  
+  it('Should throw error getter ', () => {
     muk(obj, 'a', null, {
       
     });
