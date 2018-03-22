@@ -197,7 +197,7 @@ describe('Mock value with getter', () => {
     }
   });
   
-  it('Should throw error getter ', () => {
+  it('Should have original getter after muk.restore()', () => {
     muk(obj, 'a', null, {
       
     });
