@@ -190,7 +190,7 @@ describe('Mock value with getter', () => {
 
     try {
       obj.a;
-    } catch(e) {
+    } catch (e) {
       assert.equal(e.message, 'oh no')
     }
   });
@@ -225,7 +225,7 @@ describe('Mock value with setter', () => {
   it('Value are new setter after mocked', () => {
     muk(obj, 'a', {
       set: function(value) {
-        this._a = value +1;
+        this._a = value + 1;
       },
       get: function() {
         return this._a;
@@ -244,7 +244,7 @@ describe('Mock value with setter', () => {
 
     try {
       obj.a = 2;
-    } catch(e) {
+    } catch (e) {
       assert.equal(e.message, 'oh no')
     }
   });
@@ -252,7 +252,7 @@ describe('Mock value with setter', () => {
   it('Should have original setter after muk.restore()', () => {
     muk(obj, 'a', {
       set: function(value) {
-        this._a = value +1;
+        this._a = value + 1;
       },
     });
     
