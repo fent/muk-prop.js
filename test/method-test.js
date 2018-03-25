@@ -174,45 +174,91 @@ describe('Mock value with getter', () => {
 
   afterEach(muk.restore);
   
-  it('Should have original getter after muk.restore()', () => {
-    muk(obj, 'a', null, {
-      getter: () => {
-        return 2;
-      }
+  it('Value are new getter after mocked', () => {
+    muk(obj, 'a', {
+      get: () => 2,
     });
     assert.equal(obj.a, 2, 'property a of obj is 2 with getter');
   });
   
   it('Should throw error when getter', () => {
-    muk(obj, 'a', null, {
-      getter: () => {
+    muk(obj, 'a', {
+      get: () => {
         throw new Error('oh no');
       }
     });
 
-    try{
+    try {
       obj.a;
-    }catch(e){
+    } catch(e) {
       assert.equal(e.message, 'oh no')
     }
   });
   
   it('Should have original getter after muk.restore()', () => {
-    muk(obj, 'a', null, {
-      
-    });
-    assert.equal(obj.a, undefined, 'property a of obj is undefined with empty getter');
-  });
-  
-  it('Should have original getter after muk.restore()', () => {
-    muk(obj, 'a', null, {
-      getter: () => {
-        return 2;
-      }
+    muk(obj, 'a', {
+      get: () => 2,
     });
     
     muk.restore();
-    assert.equal(obj.a, 1, 'property a of obj is equal to origin');
+    assert.equal(obj.a, 1, 'property a of obj is equal to original');
+  });
+});
+
+describe('Mock value with setter', () => {
+  var obj = {
+    _a: 1,
+  };
+
+  Object.defineProperty(obj, 'a', {
+    configurable: true,
+    set: function(value) {
+      this._a = value;
+    },
+    get: function() {
+      return this._a;
+    },
+  })
+
+  afterEach(muk.restore);
+  
+  it('Value are new setter after mocked', () => {
+    muk(obj, 'a', {
+      set: function(value) {
+        this._a = value +1;
+      },
+      get: function() {
+        return this._a;
+      },
+    });
+    obj.a = 2;
+    assert.equal(obj.a, 3, 'property a of obj is 3 with getter');
+  });
+  
+  it('Should throw error when setter', () => {
+    muk(obj, 'a', {
+      set: () => {
+        throw new Error('oh no');
+      }
+    });
+
+    try {
+      obj.a = 2;
+    } catch(e) {
+      assert.equal(e.message, 'oh no')
+    }
+  });
+  
+  it('Should have original setter after muk.restore()', () => {
+    muk(obj, 'a', {
+      set: function(value) {
+        this._a = value +1;
+      },
+    });
+    
+    muk.restore();
+    obj.a = 2;
+    assert.equal(obj.a, 2, 'property a of obj is equal to original');
   });
 });
 
