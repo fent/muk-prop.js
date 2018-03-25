@@ -115,10 +115,9 @@ describe('Mock property', () => {
     assert(!hasOwnProperty(process.env, 'notExistProp'), 'notExistProp is deleted');
   });
 
-  it('should mock function when method is null', () => {
+  it('should be undefined when value is not set', () => {
     muk(config, 'enableCache');
-    assert.equal(typeof config.enableCache, 'function', 'enableCache is function');
-    assert.equal(config.enableCache(), undefined, 'enableCache return undefined');
+    assert.equal(config.enableCache, undefined, 'enableCache is undefined');
   });
 
   it('should mock property on prototype', () => {
