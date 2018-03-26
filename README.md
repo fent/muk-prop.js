@@ -19,13 +19,28 @@ muk(fs, 'readFile', (path, callback) => {
 });
 ```
 
+Object props mocking with setter/getter.
+
+```js
+const muk = require('muk-prop');
+
+const obj = { _a: 1 };
+muk(obj, 'a', {
+  set: function(val) { this._a = val * 2; },
+  get: function(val) { return this._a; },
+});
+
+obj.a = 2;
+console.log(obj.a); // 4
+```
+
 Check if member has been mocked.
 
 ```js
 muk.isMocked(fs, 'readFile'); // true
 ```
 
-Restore all mocked methods after tests.
+Restore all mocked methods/props after tests.
 
 ```js
 muk.restore();
