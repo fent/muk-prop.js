@@ -19,13 +19,15 @@ muk(fs, 'readFile', (path, callback) => {
 });
 ```
 
-Object props mocking with setter/getter.
+Descriptor mocking, configurable and enumerable is required.
 
 ```js
 const muk = require('muk-prop');
 
 const obj = { _a: 1 };
 muk(obj, 'a', {
+  configurable: true,
+  enumerable: true,
   set: function(val) { this._a = val * 2; },
   get: function(val) { return this._a; },
 });
