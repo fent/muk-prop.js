@@ -26,13 +26,12 @@ const muk = require('muk-prop');
 
 const obj = { _a: 1 };
 muk(obj, 'a', {
-  set: function(val) { this._a = val; },
+  set: function(val) { this._a = val * 2; },
   get: function(val) { return this._a; },
 });
 
 obj.a = 2;
-// now we try to get obj._a
-console.log(obj._a); // 2
+console.log(obj.a); // 4
 ```
 
 Check if member has been mocked.
