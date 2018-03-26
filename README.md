@@ -19,47 +19,20 @@ muk(fs, 'readFile', (path, callback) => {
 });
 ```
 
-Object props mocking with setter.
+Object props mocking with setter/getter.
 
 ```js
 const muk = require('muk-prop');
 
-// original obj with a getter/setter prop
-const obj = {
-  _a: 1,
-};
-
-// we mock property 'a' with a setter
-muk(obj, a, {
-  set: function (val) {
-    this._a = val;
-  },
+const obj = { _a: 1 };
+muk(obj, 'a', {
+  set: function(val) { this._a = val; },
+  get: function(val) { return this._a; },
 });
 
 obj.a = 2;
 // now we try to get obj._a
 console.log(obj._a); // 2
-```
-
-Object props mocking with getter.
-
-```js
-const muk = require('muk-prop');
-
-// original obj
-const obj = {
-  _a: 1,
-};
-
-muk(obj, a, {
-  get: function () {
-    // got property a
-    return this._a + 1; 
-  },
-});
-
-// now we try to get obj.a
-const res = obj.a; // 2
 ```
 
 Check if member has been mocked.
