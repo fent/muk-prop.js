@@ -6,8 +6,8 @@ const fs     = require('fs');
 
 
 describe('Mock methods', () => {
-  var readFile = fs.readFile;
-  var mkdir = fs.mkdir;
+  const readFile = fs.readFile;
+  const mkdir = fs.mkdir;
 
   afterEach(muk.restore);
 
@@ -19,11 +19,11 @@ describe('Mock methods', () => {
   });
 
   it('Methods are new objects after mocked', () => {
-    var readFileMock = (path, callback) => {
+    const readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
 
-    var mkdirMock = (path, callback) => {
+    const mkdirMock = (path, callback) => {
       process.nextTick(callback.bind(null, null));
     };
 
@@ -34,7 +34,7 @@ describe('Mock methods', () => {
   });
 
   it('No errors calling new mocked methods', (done) => {
-    var readFileMock = (path, callback) => {
+    const readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
@@ -52,7 +52,7 @@ describe('Mock methods', () => {
     assert.equal(fs.readFile, readFile, 'original method is restored');
     assert.equal(fs.mkdir, mkdir, 'original method is restored');
 
-    var readFileMock = (path, callback) => {
+    const readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
@@ -62,9 +62,9 @@ describe('Mock methods', () => {
   });
 
   it('should mock method on prototype', () => {
-    var readFile = fs.readFile;
-    var newFs = Object.create(fs);
-    var readFileMock = (path, callback) => {
+    const readFile = fs.readFile;
+    const newFs = Object.create(fs);
+    const readFileMock = (path, callback) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(newFs, 'readFile', readFileMock);
@@ -76,11 +76,11 @@ describe('Mock methods', () => {
 });
 
 describe('Mock property', () => {
-  var config = {
+  const config = {
     enableCache: true,
     delay: 10
   };
-  var home = process.env.HOME;
+  const home = process.env.HOME;
 
   afterEach(muk.restore);
 
@@ -121,7 +121,7 @@ describe('Mock property', () => {
   });
 
   it('should mock property on prototype', () => {
-    var newConfig = Object.create(config);
+    const newConfig = Object.create(config);
     muk(newConfig, 'enableCache', false);
     assert.deepEqual(Object.keys(newConfig), ['enableCache'], 'obj should contain properties');
     assert.equal(newConfig.enableCache, false, 'enableCache is false');
@@ -132,7 +132,7 @@ describe('Mock property', () => {
 });
 
 describe('Mock getter', () => {
-  var obj = {
+  const obj = {
     get a() {
       return 1;
     }
@@ -156,7 +156,7 @@ describe('Mock getter', () => {
   });
 
   it('should mock property on prototype', () => {
-    var newObj = Object.create(obj);
+    const newObj = Object.create(obj);
     muk(newObj, 'a', 2);
     assert.deepEqual(Object.keys(newObj), ['a'], 'obj should contain properties');
     assert.equal(newObj.a, 2, 'property a of obj is equal to mock');
@@ -167,7 +167,7 @@ describe('Mock getter', () => {
 });
 
 describe('Mock value with getter', () => {
-  var obj = {
+  const obj = {
     a: 1,
   };
 
@@ -190,7 +190,7 @@ describe('Mock value with getter', () => {
     try {
       obj.a;
     } catch (e) {
-      assert.equal(e.message, 'oh no')
+      assert.equal(e.message, 'oh no');
     }
   });
   
@@ -205,7 +205,7 @@ describe('Mock value with getter', () => {
 });
 
 describe('Mock value with setter', () => {
-  var obj = {
+  const obj = {
     _a: 1,
   };
 
@@ -217,7 +217,7 @@ describe('Mock value with setter', () => {
     get: function() {
       return this._a;
     },
-  })
+  });
 
   afterEach(muk.restore);
   
@@ -244,7 +244,7 @@ describe('Mock value with setter', () => {
     try {
       obj.a = 2;
     } catch (e) {
-      assert.equal(e.message, 'oh no')
+      assert.equal(e.message, 'oh no');
     }
   });
   
@@ -266,7 +266,7 @@ describe('Mock check', () => {
   afterEach(muk.restore);
 
   it('Should check whether is mocked', () => {
-    var obj = {
+    const obj = {
       a: 1,
     };
     assert.equal(muk.isMocked(obj, 'a'), false, 'obj should not be mocked');
@@ -276,21 +276,21 @@ describe('Mock check', () => {
   });
 
   it('Should not be enumerable', () => {
-    var obj = {
+    const obj = {
       a: 1,
     };
     muk(obj, 'a', 2);
     assert.deepEqual(Object.keys(obj), ['a']);
 
-    var keys = [];
-    for (var key in obj) {
+    const keys = [];
+    for (let key in obj) {
       keys.push(key);
     }
     assert.deepEqual(keys, ['a']);
   });
 
   it('Should be restored', () => {
-    var obj = {
+    const obj = {
       a: 1,
     };
     muk(obj, 'a', 2);
@@ -301,7 +301,7 @@ describe('Mock check', () => {
   });
 
   it('Should check different type', () => {
-    var obj = {
+    const obj = {
       a: 1,
       b: '1',
       c: true,
