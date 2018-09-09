@@ -61,7 +61,7 @@ describe('Mock methods', () => {
     assert.equal(fs.readFile, readFile, 'mock twices, original method should be restored too');
   });
 
-  it('should mock method on prototype', () => {
+  it('Should mock method on prototype', () => {
     const readFile = fs.readFile;
     const newFs = Object.create(fs);
     const readFileMock = (path, callback) => {
@@ -115,12 +115,12 @@ describe('Mock property', () => {
     assert(!hasOwnProperty(process.env, 'notExistProp'), 'notExistProp is deleted');
   });
 
-  it('should be undefined when value is not set', () => {
+  it('Should be undefined when value is not set', () => {
     muk(config, 'enableCache');
     assert.equal(config.enableCache, undefined, 'enableCache is undefined');
   });
 
-  it('should mock property on prototype', () => {
+  it('Should mock property on prototype', () => {
     const newConfig = Object.create(config);
     muk(newConfig, 'enableCache', false);
     assert.deepEqual(Object.keys(newConfig), ['enableCache'], 'obj should contain properties');
@@ -155,7 +155,7 @@ describe('Mock getter', () => {
     assert.equal(obj.a, 1, 'property a of obj is equal to origin');
   });
 
-  it('should mock property on prototype', () => {
+  it('Should mock property on prototype', () => {
     const newObj = Object.create(obj);
     muk(newObj, 'a', 2);
     assert.deepEqual(Object.keys(newObj), ['a'], 'obj should contain properties');
@@ -326,7 +326,7 @@ describe('Mock check', () => {
     assert.ok(muk.isMocked(obj, 'e'));
   });
 
-  it('should check process.env', () => {
+  it('Should check process.env', () => {
     muk(process.env, 'HOME', '/mockhome');
     assert.equal(process.env.HOME, '/mockhome');
     assert.ok(muk.isMocked(process.env, 'HOME'));
