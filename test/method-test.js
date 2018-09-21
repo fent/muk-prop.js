@@ -40,8 +40,7 @@ describe('Mock methods', () => {
     muk(fs, 'readFile', readFileMock);
 
     fs.readFile('grimer', (err, data) => {
-      if (err) return done(err);
-
+      assert.ifError(err);
       assert.equal(data, 'hello!', 'data matches');
       done();
     });
@@ -111,8 +110,8 @@ describe('Mock property', () => {
     assert.equal(config.enableCache, true, 'enableCache is true');
     assert.equal(config.delay, 10, 'delay is 10');
     assert.equal(process.env.HOME, home, 'process.env.HOME is ' + home);
-    assert(!hasOwnProperty(config, 'notExistProp'), 'notExistProp is deleted');
-    assert(!hasOwnProperty(process.env, 'notExistProp'), 'notExistProp is deleted');
+    assert(!config.hasOwnProperty('notExistProp'), 'notExistProp is deleted');
+    assert(!process.env.hasOwnProperty('notExistProp'), 'notExistProp is deleted');
   });
 
   it('Should be undefined when value is not set', () => {
@@ -211,24 +210,16 @@ describe('Mock value with setter', () => {
 
   Object.defineProperty(obj, 'a', {
     configurable: true,
-    set: function(value) {
-      this._a = value;
-    },
-    get: function() {
-      return this._a;
-    },
+    set: (value) => obj._a = value,
+    get: () => obj._a,
   });
 
   afterEach(muk.restore);
   
   it('Value are new setter after mocked', () => {
     muk(obj, 'a', {
-      set: function(value) {
-        this._a = value + 1;
-      },
-      get: function() {
-        return this._a;
-      },
+      set: (value) => obj._a = value + 1,
+      get: () => obj._a,
     });
     obj.a = 2;
     assert.equal(obj.a, 3, 'property a of obj is 3 with getter');
@@ -250,9 +241,7 @@ describe('Mock value with setter', () => {
   
   it('Should have original setter after muk.restore()', () => {
     muk(obj, 'a', {
-      set: function(value) {
-        this._a = value + 1;
-      },
+      set: (value) => obj._a = value + 1,
     });
     
     muk.restore();
@@ -332,7 +321,3 @@ describe('Mock check', () => {
     assert.ok(muk.isMocked(process.env, 'HOME'));
   });
 });
-
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
