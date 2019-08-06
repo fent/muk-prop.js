@@ -182,7 +182,7 @@ describe('Mock value with getter', () => {
   it('Should throw error when getter', () => {
     muk(obj, 'a', {
       get: () => {
-        throw new Error('oh no');
+        throw Error('oh no');
       }
     });
 
@@ -228,7 +228,7 @@ describe('Mock value with setter', () => {
   it('Should throw error when setter', () => {
     muk(obj, 'a', {
       set: () => {
-        throw new Error('oh no');
+        throw Error('oh no');
       }
     });
 
