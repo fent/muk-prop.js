@@ -80,14 +80,13 @@ describe('Mock property', () => {
     delay: 10
   };
 
-  const plainObj = Object.create(null);
-  plainObj.testKey = 'testValue';
-
   const home = process.env.HOME;
 
   afterEach(muk.restore);
 
   it('Should mock plain object successfully', () => {
+    const plainObj = Object.create(null);
+    plainObj.testKey = 'testValue';
     muk(plainObj, 'testKey', 'mockValue');
     assert.equal(plainObj.testKey, 'mockValue', 'testKey is mockValue');
   });
