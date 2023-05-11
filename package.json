@@ -14,14 +14,14 @@
   "author": "fent <fentbox@gmail.com> (https://github.com/fent)",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "istanbul cover node_modules/.bin/_mocha -- -R spec test/*-test.js"
+    "test": "nyc --extension --reporter=lcov --reporter=text-summary mocha -- test/*-test.js"
   },
   "directories": {
     "lib": "./lib"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
-    "mocha": "^6.0.0"
+    "mocha": "^6.0.0",
+    "nyc": "^15.1.0"
   },
   "engines": {
     "node": ">=6"
