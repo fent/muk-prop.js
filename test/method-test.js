@@ -1,8 +1,8 @@
 'use strict';
 
-const muk    = require('..');
+const muk = require('..');
 const assert = require('assert');
-const fs     = require('fs');
+const fs = require('fs');
 
 
 describe('Mock methods', () => {
@@ -79,9 +79,17 @@ describe('Mock property', () => {
     enableCache: true,
     delay: 10
   };
+
   const home = process.env.HOME;
 
   afterEach(muk.restore);
+
+  it('Should mock plain object successfully', () => {
+    const plainObj = Object.create(null);
+    plainObj.testKey = 'testValue';
+    muk(plainObj, 'testKey', 'mockValue');
+    assert.equal(plainObj.testKey, 'mockValue', 'testKey is mockValue');
+  });
 
   it('Contains original property', () => {
     assert.equal(config.enableCache, true, 'enableCache is true');
@@ -171,14 +179,14 @@ describe('Mock value with getter', () => {
   };
 
   afterEach(muk.restore);
-  
+
   it('Value are new getter after mocked', () => {
     muk(obj, 'a', {
       get: () => 2,
     });
     assert.equal(obj.a, 2, 'property a of obj is 2 with getter');
   });
-  
+
   it('Should throw error when getter', () => {
     muk(obj, 'a', {
       get: () => {
@@ -192,12 +200,12 @@ describe('Mock value with getter', () => {
       assert.equal(e.message, 'oh no');
     }
   });
-  
+
   it('Should have original getter after muk.restore()', () => {
     muk(obj, 'a', {
       get: () => 2,
     });
-    
+
     muk.restore();
     assert.equal(obj.a, 1, 'property a of obj is equal to original');
   });
@@ -215,7 +223,7 @@ describe('Mock value with setter', () => {
   });
 
   afterEach(muk.restore);
-  
+
   it('Value are new setter after mocked', () => {
     muk(obj, 'a', {
       set: (value) => obj._a = value + 1,
@@ -224,7 +232,7 @@ describe('Mock value with setter', () => {
     obj.a = 2;
     assert.equal(obj.a, 3, 'property a of obj is 3 with getter');
   });
-  
+
   it('Should throw error when setter', () => {
     muk(obj, 'a', {
       set: () => {
@@ -238,12 +246,12 @@ describe('Mock value with setter', () => {
       assert.equal(e.message, 'oh no');
     }
   });
-  
+
   it('Should have original setter after muk.restore()', () => {
     muk(obj, 'a', {
       set: (value) => obj._a = value + 1,
     });
-    
+
     muk.restore();
     obj.a = 2;
     assert.equal(obj.a, 2, 'property a of obj is equal to original');
