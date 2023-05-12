@@ -31,7 +31,7 @@ describe('Mock methods', () => {
     assert.equal(fs.mkdir, mkdirMock, 'object method is equal to mock');
   });
 
-  it('No errors calling new mocked methods', (done) => {
+  it('No errors calling new mocked methods', done => {
     const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
@@ -59,7 +59,6 @@ describe('Mock methods', () => {
   });
 
   it('Should mock method on prototype', () => {
-    const readFile = fs.readFile;
     const newFs = Object.create(fs);
     const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
@@ -75,7 +74,7 @@ describe('Mock methods', () => {
 describe('Mock property', () => {
   const config = {
     enableCache: true,
-    delay: 10
+    delay: 10,
   };
 
   const home = process.env.HOME;
@@ -115,9 +114,9 @@ describe('Mock property', () => {
 
     assert.equal(config.enableCache, true, 'enableCache is true');
     assert.equal(config.delay, 10, 'delay is 10');
-    assert.equal(process.env.HOME, home, 'process.env.HOME is ' + home);
-    assert(!config.hasOwnProperty('notExistProp'), 'notExistProp is deleted');
-    assert(!process.env.hasOwnProperty('notExistProp'), 'notExistProp is deleted');
+    assert.equal(process.env.HOME, home, `process.env.HOME is ${home}`);
+    assert(!Object.prototype.hasOwnProperty.call(config, 'notExistProp'), 'notExistProp is deleted');
+    assert(!Object.prototype.hasOwnProperty.call(process.env, 'notExistProp'), 'notExistProp is deleted');
   });
 
   it('Should be undefined when value is not set', () => {
@@ -155,7 +154,7 @@ describe('Mock getter', () => {
   const obj = {
     get a() {
       return 1;
-    }
+    },
   };
 
   afterEach(muk.restore);
@@ -204,10 +203,11 @@ describe('Mock value with getter', () => {
     muk(obj, 'a', {
       get: () => {
         throw Error('oh no');
-      }
+      },
     });
 
     try {
+      // eslint-disable-next-line
       obj.a;
     } catch (e: any) {
       assert.equal(e.message, 'oh no');
@@ -251,7 +251,7 @@ describe('Mock value with setter', () => {
     muk(obj, 'a', {
       set: () => {
         throw Error('oh no');
-      }
+      },
     });
 
     try {
@@ -273,7 +273,6 @@ describe('Mock value with setter', () => {
 });
 
 describe('Mock check', () => {
-
   afterEach(muk.restore);
 
   it('Should check whether is mocked', () => {

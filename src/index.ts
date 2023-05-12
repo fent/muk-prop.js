@@ -25,7 +25,7 @@ interface Mock {
 let mocks: Mock[] = [];
 
 // Used to check what objects and properties have been mocked.
-const cache = new Map<Object, Set<string>>();
+const cache = new Map<object, Set<string>>();
 
 function isGetterSetter(value: any | mukProp.GetterSetter): value is mukProp.GetterSetter {
   return !!value && (
