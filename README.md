@@ -18,22 +18,22 @@ muk(fs, 'readFile', (path, callback) => {
 });
 ```
 
-Object props mocking with setter/getter.
+Object property mocking with getter/setter.
 
 ```js
 const muk = require('muk-prop');
 
 const obj = { _a: 1 };
 muk(obj, 'a', {
-  set: (val) => obj._a = val * 2,
   get: (val) => obj._a,
+  set: (val) => obj._a = val * 2,
 });
 
 obj.a = 2;
 console.log(obj.a); // 4
 ```
 
-Check if member has been mocked.
+Check if property has been mocked.
 
 ```js
 muk.isMocked(fs, 'readFile'); // true

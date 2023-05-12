@@ -1,8 +1,6 @@
-'use strict';
-
-const muk = require('..');
-const assert = require('assert');
-const fs = require('fs');
+import muk from '../';
+import assert from 'assert';
+import fs from 'fs';
 
 
 describe('Mock methods', () => {
@@ -19,11 +17,11 @@ describe('Mock methods', () => {
   });
 
   it('Methods are new objects after mocked', () => {
-    const readFileMock = (path, callback) => {
+    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
 
-    const mkdirMock = (path, callback) => {
+    const mkdirMock = (path: string, callback: (err: Error | null) => void) => {
       process.nextTick(callback.bind(null, null));
     };
 
@@ -34,12 +32,12 @@ describe('Mock methods', () => {
   });
 
   it('No errors calling new mocked methods', (done) => {
-    const readFileMock = (path, callback) => {
+    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
 
-    fs.readFile('grimer', (err, data) => {
+    fs.readFile('grimer', (err: Error | null, data: Buffer) => {
       assert.ifError(err);
       assert.equal(data, 'hello!', 'data matches');
       done();
@@ -51,7 +49,7 @@ describe('Mock methods', () => {
     assert.equal(fs.readFile, readFile, 'original method is restored');
     assert.equal(fs.mkdir, mkdir, 'original method is restored');
 
-    const readFileMock = (path, callback) => {
+    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
@@ -63,7 +61,7 @@ describe('Mock methods', () => {
   it('Should mock method on prototype', () => {
     const readFile = fs.readFile;
     const newFs = Object.create(fs);
-    const readFileMock = (path, callback) => {
+    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(newFs, 'readFile', readFileMock);
@@ -138,16 +136,18 @@ describe('Mock property', () => {
   });
 
   it('Should mock Map value', () => {
-    muk(config, 'testKey', new Map());
-    config.testKey.set('mapKey', 'mapValue');
-    assert.equal(config.testKey.get('mapKey'), 'mapValue', 'testKey is mockValue');
+    const localConfig: any = {};
+    muk(localConfig, 'testKey', new Map());
+    localConfig.testKey.set('mapKey', 'mapValue');
+    assert.equal(localConfig.testKey.get('mapKey'), 'mapValue', 'testKey is mockValue');
   });
 
   it('Should mock Set value', () => {
-    muk(config, 'testKey', new Set());
-    config.testKey.add('setValue');
-    assert(config.testKey.has('setValue'));
-    assert.equal(config.testKey.size, 1, 'testKey is mockValue');
+    const localConfig: any = {};
+    muk(localConfig, 'testKey', new Set());
+    localConfig.testKey.add('setValue');
+    assert(localConfig.testKey.has('setValue'));
+    assert.equal(localConfig.testKey.size, 1, 'testKey is mockValue');
   });
 });
 
@@ -209,7 +209,7 @@ describe('Mock value with getter', () => {
 
     try {
       obj.a;
-    } catch (e) {
+    } catch (e: any) {
       assert.equal(e.message, 'oh no');
     }
   });
@@ -227,11 +227,12 @@ describe('Mock value with getter', () => {
 describe('Mock value with setter', () => {
   const obj = {
     _a: 1,
+    a: -1,
   };
 
   Object.defineProperty(obj, 'a', {
     configurable: true,
-    set: (value) => obj._a = value,
+    set: (value: number) => obj._a = value,
     get: () => obj._a,
   });
 
@@ -239,7 +240,7 @@ describe('Mock value with setter', () => {
 
   it('Value are new setter after mocked', () => {
     muk(obj, 'a', {
-      set: (value) => obj._a = value + 1,
+      set: (value: number) => obj._a = value + 1,
       get: () => obj._a,
     });
     obj.a = 2;
@@ -255,14 +256,14 @@ describe('Mock value with setter', () => {
 
     try {
       obj.a = 2;
-    } catch (e) {
+    } catch (e: any) {
       assert.equal(e.message, 'oh no');
     }
   });
 
   it('Should have original setter after muk.restore()', () => {
     muk(obj, 'a', {
-      set: (value) => obj._a = value + 1,
+      set: (value: number) => obj._a = value + 1,
     });
 
     muk.restore();
