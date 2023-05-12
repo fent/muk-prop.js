@@ -15,17 +15,13 @@ namespace mukProp {
 }
 
 interface Mock {
-  obj: Record<string, any>;
-  key: string;
   descriptor?: PropertyDescriptor;
   hasOwnProperty: boolean;
 }
 
-// Keep track of mocks
-let mocks: Mock[] = [];
-
-// Used to check what objects and properties have been mocked.
-const cache = new Map<object, Set<string>>();
+// Keep track of mocks so that the user can know if an object property
+// has been previously mocked, and to restore mocks.
+const allMocks = new Map<Record<string, any>, Map<string, Mock>>();
 
 function isGetterSetter(value: any | mukProp.GetterSetter): value is mukProp.GetterSetter {
   return !!value && (
@@ -44,66 +40,65 @@ function isGetterSetter(value: any | mukProp.GetterSetter): value is mukProp.Get
  */
 let mukProp = ((obj: Record<string, any>, key: string, value?: any | mukProp.GetterSetter) => {
   const hasOwnProperty = Object.prototype.hasOwnProperty.call(obj, key);
-  mocks.push({
-    obj,
-    key,
-    descriptor: Object.getOwnPropertyDescriptor(obj, key),
-    // Make sure the key exists on object not the prototype
-    hasOwnProperty,
-  });
+
+  // Add to list of mocks.
+  let objMocks = allMocks.get(obj);
+  if (!objMocks) {
+    objMocks = new Map();
+    allMocks.set(obj, objMocks);
+  }
+  if (!objMocks.has(key)) {
+    objMocks.set(key, {
+      descriptor: Object.getOwnPropertyDescriptor(obj, key),
+      // Make sure the key exists on object not the prototype
+      hasOwnProperty,
+    });
+  }
 
   // Delete the origin key, redefine it below
   if (hasOwnProperty) {
     delete obj[key];
   }
 
-  // Set a flag that checks if it is mocked
-  let flag = cache.get(obj);
-  if (!flag) {
-    flag = new Set();
-    cache.set(obj, flag);
-  }
-  flag.add(key);
-
-  const descriptor: PropertyDescriptor = {
+  const mockDescriptor: PropertyDescriptor = {
     configurable: true,
     enumerable: true,
   };
 
   if (value && isGetterSetter(value)) {
     // Default to undefined
-    descriptor.get = value.get;
-    descriptor.set = value.set;
+    mockDescriptor.get = value.get;
+    mockDescriptor.set = value.set;
   } else {
     // Without getter/setter mode
-    descriptor.value = value;
-    descriptor.writable = true;
+    mockDescriptor.value = value;
+    mockDescriptor.writable = true;
   }
 
-  Object.defineProperty(obj, key, descriptor);
+  Object.defineProperty(obj, key, mockDescriptor);
 }) as mukProp.mukPropFunc;
 
 /**
  * Restore all mocks
  */
 mukProp.restore = () => {
-  for (let i = mocks.length - 1; i >= 0; i--) {
-    let mock = mocks[i];
-    if (!mock.hasOwnProperty) {
-      // Delete the mock key, use key on the prototype
-      delete mock.obj[mock.key];
-    } else if (mock.descriptor) {
-      // Redefine the origin key instead of the mock key
-      Object.defineProperty(mock.obj, mock.key, mock.descriptor);
+  for (let [obj, objMocks] of allMocks.entries()) {
+    for (let [key, mock] of objMocks.entries()) {
+      if (!mock.hasOwnProperty) {
+        // Delete the mock key, use key on the prototype
+        delete obj[key];
+      } else {
+        // Redefine the origin key instead of the mock key
+        Object.defineProperty(obj, key, mock.descriptor as PropertyDescriptor);
+      }
     }
   }
-  mocks = [];
-  cache.clear();
+  allMocks.clear();
 };
 
 mukProp.isMocked = (obj: Record<string, any>, key: string) => {
-  let flag = cache.get(obj);
-  return flag ? flag.has(key) : false;
+  let objMocks = allMocks.get(obj);
+  return objMocks ? objMocks.has(key) : false;
 };
 
 
