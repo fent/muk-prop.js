@@ -136,6 +136,19 @@ describe('Mock property', () => {
     muk.restore();
     assert.equal(newConfig.enableCache, true, 'enableCache is false');
   });
+
+  it('Should mock Map value', () => {
+    muk(config, 'testKey', new Map());
+    config.testKey.set('mapKey', 'mapValue');
+    assert.equal(config.testKey.get('mapKey'), 'mapValue', 'testKey is mockValue');
+  });
+
+  it('Should mock Set value', () => {
+    muk(config, 'testKey', new Set());
+    config.testKey.add('setValue');
+    assert(config.testKey.has('setValue'));
+    assert.equal(config.testKey.size, 1, 'testKey is mockValue');
+  });
 });
 
 describe('Mock getter', () => {
