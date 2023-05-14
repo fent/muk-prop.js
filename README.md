@@ -34,6 +34,25 @@ obj.a = 2;
 console.log(obj.a); // 4
 ```
 
+Map props mocking.
+```js
+const muk = require('muk-prop');
+const obj = { a: 1 };
+muk(obj, 'a', new Map());
+obj.a.set('test', 1);
+obj.a.get('test'); // 1
+```
+
+Set props mocking.
+```js
+const muk = require('muk-prop');
+const obj = { a: 1 };
+muk(obj, 'a', new Set());
+obj.a.add('test');
+obj.a.has('test'); // true
+console.log(obj.a.size); // 1
+```
+
 Check if member has been mocked.
 
 ```js
