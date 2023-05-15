@@ -6,7 +6,7 @@
     "mock",
     "stub"
   ],
-  "version": "3.0.0",
+  "version": "3.0.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/fent/muk-prop.js.git"
