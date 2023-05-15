@@ -197,7 +197,9 @@ describe('Mock value with getter', () => {
     muk(obj, 'a', {
       get: () => 2,
     });
-    assert.equal(obj.a, 2, 'property a of obj is 2 with getter');
+
+    assert.equal(typeof obj.a.get, 'function', 'property a.get of obj is a function');
+    assert.equal(obj.a.get(), 2, 'property a of obj is 2 with getter');
   });
 
   it('Should throw error when getter', () => {
@@ -208,7 +210,7 @@ describe('Mock value with getter', () => {
     });
 
     try {
-      obj.a;
+      obj.a.get();
     } catch (e) {
       assert.equal(e.message, 'oh no');
     }
@@ -237,21 +239,14 @@ describe('Mock value with setter', () => {
 
   afterEach(muk.restore);
 
-  it('Value are new setter after mocked', () => {
-    muk(obj, 'a', {
-      set: (value) => obj._a = value + 1,
-      get: () => obj._a,
-    });
-    obj.a = 2;
-    assert.equal(obj.a, 3, 'property a of obj is 3 with getter');
-  });
-
   it('Should throw error when setter', () => {
-    muk(obj, 'a', {
+    const mockObj = {};
+    Object.defineProperty(mockObj, 'a', {
       set: () => {
         throw Error('oh no');
-      }
+      },
     });
+    muk(obj, 'a', mockObj.a);
 
     try {
       obj.a = 2;

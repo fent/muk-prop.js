@@ -25,10 +25,12 @@ Object props mocking with setter/getter.
 const muk = require('muk-prop');
 
 const obj = { _a: 1 };
-muk(obj, 'a', {
-  set: (val) => obj._a = val * 2,
-  get: (val) => obj._a,
+const mockObj = {};
+Object.defineProperty(mockObj, 'a', {
+  set: (val) => obj._a = val * 2,,
+  get: () => obj._a, 
 });
+muk(obj, 'a', mockObj.a);
 
 obj.a = 2;
 console.log(obj.a); // 4
