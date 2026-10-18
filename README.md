@@ -1,6 +1,7 @@
 # muk-prop.js
 
-![Depfu](https://img.shields.io/depfu/fent/muk-prop.js)
+[![npm](https://img.shields.io/npm/v/muk-prop)](https://www.npmjs.com/package/muk-prop)
+[![Node.js CI](https://github.com/fent/muk-prop.js/actions/workflows/nodejs.yml/badge.svg)](https://github.com/fent/muk-prop.js/actions/workflows/nodejs.yml)
 [![codecov](https://codecov.io/gh/fent/muk-prop.js/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/muk-prop.js)
 
 ![muk](muk.gif)
