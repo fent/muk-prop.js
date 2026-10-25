@@ -16,25 +16,24 @@
   "scripts": {
     "prepare": "tsc -p tsconfig.build.json",
     "build": "tsc -p tsconfig.build.json",
-    "test": "nyc --extension --reporter=lcov --reporter=text-summary npm run test:unit",
-    "test:unit": "mocha -- --require ts-node/register test/*-test.ts",
+    "test": "nyc --extension .ts --reporter=lcov --reporter=text-summary npm run test:unit",
+    "test:unit": "mocha --require ts-node/register test/*-test.ts",
     "lint": "eslint ./src ./test",
     "lint:fix": "eslint --fix ./src ./test"
-
   },
   "directories": {
     "lib": "./lib"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^20.1.2",
-    "@typescript-eslint/eslint-plugin": "^8.71.2",
-    "@typescript-eslint/parser": "^8.71.2",
-    "eslint": "^8.40.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.0",
+    "@typescript-eslint/parser": "^8.72.0",
+    "eslint": "^8.57.1",
     "mocha": "^12.0.3",
     "nyc": "^18.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   },
   "engines": {
     "node": ">=6"
