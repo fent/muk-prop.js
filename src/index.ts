@@ -8,7 +8,11 @@ namespace mukProp {
   }
 
   export interface mukPropFunc {
-    (obj: Record<string, any>, key: string, value?: any | mukProp.GetterSetter): void;
+    (
+      obj: Record<string, any>,
+      key: string,
+      value?: any | mukProp.GetterSetter,
+    ): void;
     restore(): void;
     isMocked(obj: Record<string, any>, key: string): boolean;
   }
@@ -23,13 +27,15 @@ interface Mock {
 // has been previously mocked, and to restore mocks.
 const allMocks = new Map<Record<string, any>, Map<string, Mock>>();
 
-function isGetterSetter(value: any | mukProp.GetterSetter): value is mukProp.GetterSetter {
-  return !!value && (
-    Object.prototype.hasOwnProperty.call(value, 'get') ||
-    Object.prototype.hasOwnProperty.call(value, 'set')
+function isGetterSetter(
+  value: any | mukProp.GetterSetter,
+): value is mukProp.GetterSetter {
+  return (
+    !!value &&
+    (Object.prototype.hasOwnProperty.call(value, 'get') ||
+      Object.prototype.hasOwnProperty.call(value, 'set'))
   );
 }
-
 
 /**
  * Mocks a value of an object.
@@ -38,7 +44,11 @@ function isGetterSetter(value: any | mukProp.GetterSetter): value is mukProp.Get
  * @param {string} key
  * @param {!Function|Object|GetterSetter} value
  */
-let mukProp = ((obj: Record<string, any>, key: string, value?: any | mukProp.GetterSetter) => {
+let mukProp = ((
+  obj: Record<string, any>,
+  key: string,
+  value?: any | mukProp.GetterSetter,
+) => {
   const hasOwnProperty = Object.prototype.hasOwnProperty.call(obj, key);
 
   // Add to list of mocks.
@@ -100,6 +110,5 @@ mukProp.isMocked = (obj: Record<string, any>, key: string) => {
   let objMocks = allMocks.get(obj);
   return objMocks ? objMocks.has(key) : false;
 };
-
 
 export = mukProp;

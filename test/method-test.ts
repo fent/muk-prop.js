@@ -2,7 +2,6 @@ import muk from '../';
 import assert from 'assert';
 import fs from 'fs';
 
-
 describe('Mock methods', () => {
   const readFile = fs.readFile;
   const mkdir = fs.mkdir;
@@ -10,14 +9,19 @@ describe('Mock methods', () => {
   afterEach(muk.restore);
 
   it('Contains original methods', () => {
-    assert.equal(typeof fs.readFile, 'function',
-      'fs.readFile is function');
-    assert.equal(typeof fs.readFileSync, 'function',
-      'fs.readFileSync is function');
+    assert.equal(typeof fs.readFile, 'function', 'fs.readFile is function');
+    assert.equal(
+      typeof fs.readFileSync,
+      'function',
+      'fs.readFileSync is function',
+    );
   });
 
   it('Methods are new objects after mocked', () => {
-    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
+    const readFileMock = (
+      path: string,
+      callback: (err: Error | null, contents: string) => void,
+    ) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
 
@@ -31,8 +35,11 @@ describe('Mock methods', () => {
     assert.equal(fs.mkdir, mkdirMock, 'object method is equal to mock');
   });
 
-  it('No errors calling new mocked methods', done => {
-    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
+  it('No errors calling new mocked methods', (done) => {
+    const readFileMock = (
+      path: string,
+      callback: (err: Error | null, contents: string) => void,
+    ) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
@@ -49,22 +56,36 @@ describe('Mock methods', () => {
     assert.equal(fs.readFile, readFile, 'original method is restored');
     assert.equal(fs.mkdir, mkdir, 'original method is restored');
 
-    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
+    const readFileMock = (
+      path: string,
+      callback: (err: Error | null, contents: string) => void,
+    ) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(fs, 'readFile', readFileMock);
     muk(fs, 'readFile', readFileMock);
     muk.restore();
-    assert.equal(fs.readFile, readFile, 'mock twices, original method should be restored too');
+    assert.equal(
+      fs.readFile,
+      readFile,
+      'mock twices, original method should be restored too',
+    );
   });
 
   it('Should mock method on prototype', () => {
     const newFs = Object.create(fs);
-    const readFileMock = (path: string, callback: (err: Error | null, contents: string) => void) => {
+    const readFileMock = (
+      path: string,
+      callback: (err: Error | null, contents: string) => void,
+    ) => {
       process.nextTick(callback.bind(null, null, 'hello!'));
     };
     muk(newFs, 'readFile', readFileMock);
-    assert.equal(newFs.readFile, readFileMock, 'object method is equal to mock');
+    assert.equal(
+      newFs.readFile,
+      readFileMock,
+      'object method is equal to mock',
+    );
 
     muk.restore();
     assert.equal(newFs.readFile, readFile, 'object method is equal to origin');
@@ -100,7 +121,11 @@ describe('Mock property', () => {
 
     assert.equal(config.enableCache, false, 'enableCache is false');
     assert.equal(config.delay, 0, 'delay is 0');
-    assert.equal(process.env.HOME, '/mockhome', 'process.env.HOME is /mockhome');
+    assert.equal(
+      process.env.HOME,
+      '/mockhome',
+      'process.env.HOME is /mockhome',
+    );
   });
 
   it('Should have original properties after muk.restore()', () => {
@@ -115,8 +140,14 @@ describe('Mock property', () => {
     assert.equal(config.enableCache, true, 'enableCache is true');
     assert.equal(config.delay, 10, 'delay is 10');
     assert.equal(process.env.HOME, home, `process.env.HOME is ${home}`);
-    assert(!Object.prototype.hasOwnProperty.call(config, 'notExistProp'), 'notExistProp is deleted');
-    assert(!Object.prototype.hasOwnProperty.call(process.env, 'notExistProp'), 'notExistProp is deleted');
+    assert(
+      !Object.prototype.hasOwnProperty.call(config, 'notExistProp'),
+      'notExistProp is deleted',
+    );
+    assert(
+      !Object.prototype.hasOwnProperty.call(process.env, 'notExistProp'),
+      'notExistProp is deleted',
+    );
   });
 
   it('Should be undefined when value is not set', () => {
@@ -127,7 +158,11 @@ describe('Mock property', () => {
   it('Should mock property on prototype', () => {
     const newConfig = Object.create(config);
     muk(newConfig, 'enableCache', false);
-    assert.deepEqual(Object.keys(newConfig), ['enableCache'], 'obj should contain properties');
+    assert.deepEqual(
+      Object.keys(newConfig),
+      ['enableCache'],
+      'obj should contain properties',
+    );
     assert.equal(newConfig.enableCache, false, 'enableCache is false');
 
     muk.restore();
@@ -138,7 +173,11 @@ describe('Mock property', () => {
     const localConfig: any = {};
     muk(localConfig, 'testKey', new Map());
     localConfig.testKey.set('mapKey', 'mapValue');
-    assert.equal(localConfig.testKey.get('mapKey'), 'mapValue', 'testKey is mockValue');
+    assert.equal(
+      localConfig.testKey.get('mapKey'),
+      'mapValue',
+      'testKey is mockValue',
+    );
   });
 
   it('Should mock Set value', () => {
@@ -177,7 +216,11 @@ describe('Mock getter', () => {
   it('Should mock property on prototype', () => {
     const newObj = Object.create(obj);
     muk(newObj, 'a', 2);
-    assert.deepEqual(Object.keys(newObj), ['a'], 'obj should contain properties');
+    assert.deepEqual(
+      Object.keys(newObj),
+      ['a'],
+      'obj should contain properties',
+    );
     assert.equal(newObj.a, 2, 'property a of obj is equal to mock');
 
     muk.restore();
@@ -232,7 +275,7 @@ describe('Mock value with setter', () => {
 
   Object.defineProperty(obj, 'a', {
     configurable: true,
-    set: (value: number) => obj._a = value,
+    set: (value: number) => (obj._a = value),
     get: () => obj._a,
   });
 
@@ -240,7 +283,7 @@ describe('Mock value with setter', () => {
 
   it('Value are new setter after mocked', () => {
     muk(obj, 'a', {
-      set: (value: number) => obj._a = value + 1,
+      set: (value: number) => (obj._a = value + 1),
       get: () => obj._a,
     });
     obj.a = 2;
@@ -263,7 +306,7 @@ describe('Mock value with setter', () => {
 
   it('Should have original setter after muk.restore()', () => {
     muk(obj, 'a', {
-      set: (value: number) => obj._a = value + 1,
+      set: (value: number) => (obj._a = value + 1),
     });
 
     muk.restore();

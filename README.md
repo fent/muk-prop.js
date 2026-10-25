@@ -27,7 +27,7 @@ const muk = require('muk-prop');
 const obj = { _a: 1 };
 muk(obj, 'a', {
   get: (val) => obj._a,
-  set: (val) => obj._a = val * 2,
+  set: (val) => (obj._a = val * 2),
 });
 
 obj.a = 2;
@@ -50,13 +50,12 @@ fs.readFile(file, (err, data) => {
 });
 ```
 
-
 # Install
 
     npm install muk-prop
 
-
 # Tests
+
 Tests are written with [mocha](https://mochajs.org)
 
 ```bash
