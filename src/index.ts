@@ -2,19 +2,21 @@
 // the functions `restore` and `isMocked` attached. This keeps the old interface
 // around and minimizes breaking changes.
 namespace mukProp {
+  export type Target = Record<string, any>;
+
   export interface GetterSetter {
-    get: () => any;
-    set: (value: any) => void;
+    get?: () => any;
+    set?: (value: any) => void;
   }
 
   export interface mukPropFunc {
     (
-      obj: Record<string, any>,
+      obj: Target,
       key: string,
       value?: any | mukProp.GetterSetter,
     ): void;
     restore(): void;
-    isMocked(obj: Record<string, any>, key: string): boolean;
+    isMocked(obj: Target, key: string): boolean;
   }
 }
 
@@ -25,7 +27,7 @@ interface Mock {
 
 // Keep track of mocks so that the user can know if an object property
 // has been previously mocked, and to restore mocks.
-const allMocks = new Map<Record<string, any>, Map<string, Mock>>();
+const allMocks = new Map<mukProp.Target, Map<string, Mock>>();
 
 function isGetterSetter(
   value: any | mukProp.GetterSetter,
@@ -41,7 +43,7 @@ function isGetterSetter(
  * Mocks a value of an object.
  */
 let mukProp = ((
-  obj: Record<string, any>,
+  obj: mukProp.Target,
   key: string,
   value?: any | mukProp.GetterSetter,
 ) => {
@@ -102,7 +104,7 @@ mukProp.restore = () => {
   allMocks.clear();
 };
 
-mukProp.isMocked = (obj: Record<string, any>, key: string) => {
+mukProp.isMocked = (obj: mukProp.Target, key: string) => {
   let objMocks = allMocks.get(obj);
   return objMocks ? objMocks.has(key) : false;
 };
