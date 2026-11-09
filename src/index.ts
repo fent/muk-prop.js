@@ -17,6 +17,8 @@ namespace mukProp {
     ): void;
     restore(): void;
     isMocked(obj: Target, key: string): boolean;
+    mukProp: mukProp.mukPropFunc;
+    default: mukProp.mukPropFunc;
   }
 }
 
@@ -108,5 +110,15 @@ mukProp.isMocked = (obj: mukProp.Target, key: string) => {
   let objMocks = allMocks.get(obj);
   return objMocks ? objMocks.has(key) : false;
 };
+
+mukProp.mukProp = mukProp;
+mukProp.default = mukProp;
+
+// Statically recognizable exports for Node.js cjs-module-lexer (ESM named import support)
+module.exports = mukProp;
+module.exports.default = mukProp;
+module.exports.mukProp = mukProp;
+module.exports.restore = mukProp.restore;
+module.exports.isMocked = mukProp.isMocked;
 
 export = mukProp;
