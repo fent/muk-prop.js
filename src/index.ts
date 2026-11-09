@@ -39,10 +39,6 @@ function isGetterSetter(
 
 /**
  * Mocks a value of an object.
- *
- * @param {Object} obj
- * @param {string} key
- * @param {!Function|Object|GetterSetter} value
  */
 let mukProp = ((
   obj: Record<string, any>,
