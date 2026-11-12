@@ -1,4 +1,4 @@
-import muk from '../';
+import muk from '../src';
 import assert from 'assert';
 import fs from 'fs';
 
