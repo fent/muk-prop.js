@@ -10,11 +10,7 @@ namespace mukProp {
   }
 
   export interface mukPropFunc {
-    (
-      obj: Target,
-      key: string,
-      value?: any | mukProp.GetterSetter,
-    ): void;
+    (obj: Target, key: string, value?: any | mukProp.GetterSetter): void;
     restore(): void;
     isMocked(obj: Target, key: string): boolean;
     mukProp: mukProp.mukPropFunc;
